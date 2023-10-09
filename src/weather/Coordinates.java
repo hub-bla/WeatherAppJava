@@ -19,20 +19,8 @@ public class Coordinates {
         try {
 
             URL url = new URL ("https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1");
-            HttpURLConnection con = fetchData(url);
-            StringBuilder resultJson = new StringBuilder();
-            Scanner scanner = new Scanner(con.getInputStream());
-
-            while (scanner.hasNext()){
-                resultJson.append(scanner.nextLine());
-            }
-            scanner.close();
-
-            con.disconnect();
-
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObj = (JSONObject) parser.parse(String.valueOf(resultJson));
-            JSONArray jsonArr = (JSONArray) jsonObj.get("results");
+            JSONObject data = fetchData(url);
+            JSONArray jsonArr = (JSONArray) data.get("results");
             JSONObject cityObj = (JSONObject) jsonArr.get(0);
             this.latitude = (double) cityObj.get("latitude");
             this.longitude = (double) cityObj.get("longitude");

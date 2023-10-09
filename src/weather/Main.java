@@ -1,9 +1,13 @@
 package weather;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.Scanner;
 
 
 public class Main {
@@ -11,25 +15,36 @@ public class Main {
 
         System.out.println("Hello World");
 
-        Coordinates corr = new Coordinates("Berlin");
+        Weather wthr = new Weather("Berlin");
 
-        System.out.println(corr.getLatitude());
+//        System.out.println(corr.getLatitude());
     }
 
 
-    public static HttpURLConnection fetchData(URL url){
+    public static JSONObject fetchData(URL url){
         try {
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.connect();
+            StringBuilder resultJson = new StringBuilder();
+            Scanner scanner = new Scanner(con.getInputStream());
 
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+            while (scanner.hasNext()){
+                resultJson.append(scanner.nextLine());
+            }
 
-        con.connect();
+            scanner.close();
+            con.disconnect();
 
-        return con;
-        }catch (IOException e) {
+            JSONParser parser = new JSONParser();
+
+            return (JSONObject) parser.parse(String.valueOf(resultJson));
+        }catch (Exception e) {
             throw new Error("Couldn't get data", e.getCause());
         }
-
-
     }
+
+
+
+
 }
