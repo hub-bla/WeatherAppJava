@@ -16,8 +16,7 @@ public class Main {
             public void run() {
                 WeatherGUI wGUI = new WeatherGUI();
                 wGUI.setVisible(true);
-                Weather w = new Weather("Berlin");
-                wGUI.displayWeather(w);
+                wGUI.displaySearch();
             }
         });
 //        System.out.println("Hello World");
