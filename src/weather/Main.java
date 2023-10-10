@@ -19,19 +19,12 @@ public class Main {
                 wGUI.displaySearch();
             }
         });
-//        System.out.println("Hello World");
-//
-//        Weather wthr = new Weather("Berlin");
-//
-//        System.out.println(wthr.getTemperatureInCelsius());
+
     }
 
 
-    public static JSONObject fetchData(URL url){
+    public static JSONObject readData(HttpURLConnection con){
         try {
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.connect();
             StringBuilder resultJson = new StringBuilder();
             Scanner scanner = new Scanner(con.getInputStream());
 
@@ -43,12 +36,26 @@ public class Main {
             con.disconnect();
 
             JSONParser parser = new JSONParser();
-
             return (JSONObject) parser.parse(String.valueOf(resultJson));
         }catch (Exception e) {
+//            System.out.println(e.getMessage());
+            return null;
+        }
+
+    }
+    public static JSONObject fetchData(URL url){
+        try {
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.connect();
+            return readData(con);
+
+            }catch (Exception e) {
             throw new Error("Couldn't get data", e.getCause());
         }
     }
+
+
 
 
 

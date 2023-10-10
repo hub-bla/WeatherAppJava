@@ -14,8 +14,7 @@ public class Weather {
     private String nameOfCity;
     private String weatherCondition;
     private Coordinates cor;
-    Weather(String city) {
-        cor = new Coordinates(city);
+    Weather(Coordinates cor) {
 
         try {
 
@@ -24,7 +23,7 @@ public class Weather {
             JSONObject weatherData = (JSONObject) data.get("current_weather");
             weatherCondition = String.valueOf(weatherData.get("weathercode"));
             windSpeed =  Double.parseDouble(String.valueOf(weatherData.get("windspeed"))) ;
-            nameOfCity = city;
+            nameOfCity = cor.getCity();
             temperatureInCelsius = Double.parseDouble(String.valueOf(weatherData.get("temperature")));
         }catch (Exception e) {
             throw new Error(e.getMessage());
@@ -34,6 +33,14 @@ public class Weather {
 
     public double getTemperatureInCelsius() {
         return temperatureInCelsius;
+    }
+
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    public String getWeatherCondition() {
+        return weatherCondition;
     }
 
     public String getNameOfCity() {
