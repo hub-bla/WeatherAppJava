@@ -3,21 +3,28 @@ package weather;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import javax.swing.*;
 import java.net.*;
 import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args)  {
-
-        System.out.println("Hello World");
-
-        Weather wthr = new Weather("Berlin");
-
-//        System.out.println(corr.getLatitude());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                WeatherGUI wGUI = new WeatherGUI();
+                wGUI.setVisible(true);
+                Weather w = new Weather("Berlin");
+                wGUI.displayWeather(w);
+            }
+        });
+//        System.out.println("Hello World");
+//
+//        Weather wthr = new Weather("Berlin");
+//
+//        System.out.println(wthr.getTemperatureInCelsius());
     }
 
 

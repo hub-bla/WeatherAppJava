@@ -31,4 +31,12 @@ public class Weather {
         }
 
     }
+
+    public double getTemperatureInCelsius() {
+        return temperatureInCelsius;
+    }
+
+    public String getNameOfCity() {
+        return nameOfCity;
+    }
 }
