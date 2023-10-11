@@ -5,6 +5,7 @@ import org.json.simple.parser.JSONParser;
 
 
 import javax.swing.*;
+import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
 
@@ -43,15 +44,17 @@ public class Main {
         }
 
     }
-    public static JSONObject fetchData(URL url){
+    public static JSONObject fetchData(URL url) throws SpecifiedException{
         try {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.connect();
+
+            System.out.println(con.getResponseCode());
             return readData(con);
 
-            }catch (Exception e) {
-            throw new Error("Couldn't get data", e.getCause());
+            }catch (IOException e) {
+                throw new NoConnection();
         }
     }
 

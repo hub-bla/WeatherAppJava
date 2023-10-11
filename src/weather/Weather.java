@@ -14,19 +14,23 @@ public class Weather {
     private String nameOfCity;
     private String weatherCondition;
     private Coordinates cor;
-    Weather(Coordinates cor) {
+    Weather(Coordinates cor) throws SpecifiedException{
 
         try {
 
             URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + Double.toString(cor.getLatitude()) + "&longitude=" + Double.toString(cor.getLongitude()) + "&current_weather=true");
             JSONObject data = fetchData(url);
+
             JSONObject weatherData = (JSONObject) data.get("current_weather");
             weatherCondition = String.valueOf(weatherData.get("weathercode"));
             windSpeed =  Double.parseDouble(String.valueOf(weatherData.get("windspeed"))) ;
             nameOfCity = cor.getCity();
             temperatureInCelsius = Double.parseDouble(String.valueOf(weatherData.get("temperature")));
-        }catch (Exception e) {
-            throw new Error(e.getMessage());
+        }catch (SpecifiedException e){
+            throw e;
+        }
+        catch (MalformedURLException e){
+            System.out.println(e.getMessage());
         }
 
     }

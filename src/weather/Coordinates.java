@@ -16,7 +16,6 @@ public class Coordinates  {
     private double longitude;
     private String city;
 
-    private String errorMessage = null;
     Coordinates(String city) throws SpecifiedException {
         try {
 
@@ -25,7 +24,7 @@ public class Coordinates  {
             JSONObject data = fetchData(url);
             System.out.println(data);
             if (!data.containsKey("results")){
-                throw new NotFound();
+                throw new NotFound(city);
             }
 
             JSONArray jsonArr = (JSONArray) data.get("results");
@@ -45,31 +44,19 @@ public class Coordinates  {
 
     };
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
 }

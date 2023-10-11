@@ -43,38 +43,10 @@ public class WeatherGUI extends JFrame {
         JTextField searchTextField = new JTextField();
         searchTextField.setBounds(15, 15, (int) (width*0.9), 25);
 
-        JLabel loadingText = new JLabel();
-        loadingText.setBounds(0, height/2, width, 25);
-        loadingText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
-        loadingText.setVisible(false);
-        loadingText.addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentShown(ComponentEvent e) {
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                System.out.println(e);
-                loadingText.setText("Loading...");
-            }
-
-
-        });
         searchTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
-                    loadingText.setVisible(true);
                     try {
                         Coordinates cor = new Coordinates(searchTextField.getText());
 
@@ -95,7 +67,6 @@ public class WeatherGUI extends JFrame {
             }
         });
 
-        add(loadingText);
         add(cityText);
         add(temperatureText);
         add(windSpeedText);
