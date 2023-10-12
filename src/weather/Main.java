@@ -3,7 +3,6 @@ package weather;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
 import javax.swing.*;
 import java.io.IOException;
 import java.net.*;
@@ -15,9 +14,8 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                WeatherGUI wGUI = new WeatherGUI();
-                wGUI.setVisible(true);
-                wGUI.displaySearch();
+                WeatherPage wPage= new WeatherPage();
+
             }
         });
 
@@ -46,6 +44,7 @@ public class Main {
     }
     public static JSONObject fetchData(URL url) throws SpecifiedException{
         try {
+            System.out.println(url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.connect();

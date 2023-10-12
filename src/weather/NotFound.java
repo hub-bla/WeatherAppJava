@@ -2,7 +2,7 @@ package weather;
 
 public class NotFound extends SpecifiedException{
     private String city;
-    public NotFound(String uCity){
+     NotFound(String uCity){
         city = uCity;
     }
 

@@ -2,12 +2,8 @@ package weather;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.*;
-import java.util.Scanner;
 
 import static weather.Main.fetchData;
 
@@ -19,7 +15,7 @@ public class Coordinates  {
     Coordinates(String city) throws SpecifiedException {
         try {
 
-            URL url = new URL ("https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1");
+            URL url = new URL ("https://geocoding-api.open-meteo.com/v1/search?name=" + city.replace(" ", "%20") + "&count=1");
 
             JSONObject data = fetchData(url);
             System.out.println(data);

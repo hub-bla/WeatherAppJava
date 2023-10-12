@@ -1,28 +1,32 @@
 package weather;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class WeatherGUI extends JFrame {
+public class WeatherPage implements ActionListener {
     private int width = 450;
     private int height = 600;
 
-    public WeatherGUI(){
-        super("Weather App");
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        setSize(width, height);
+    private Weather w;
+    private Coordinates cor;
+    JFrame frame = new JFrame();
+    JButton openChartButton;
+    WeatherPage(){
+        displaySearch();
+        frame.setTitle("Weather App");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        frame.setSize(width, height);
         //app opens at center
-        setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(null);
         // to manually position components
-        setLayout(null);
+        frame.setLayout(null);
         //disable resizing
-        setResizable(false);
+        frame.setResizable(false);
     }
 
     public void displaySearch() {
@@ -43,20 +47,28 @@ public class WeatherGUI extends JFrame {
         JTextField searchTextField = new JTextField();
         searchTextField.setBounds(15, 15, (int) (width*0.9), 25);
 
+        openChartButton = new JButton();
+        openChartButton.setBounds(0, (height/2)+paddingToInc*3, width, 25);
+        openChartButton.addActionListener(this);
+        openChartButton.setText("Open forecast chart");
+        openChartButton.setHorizontalTextPosition(JButton.CENTER);
+        openChartButton.setVisible(false);
         searchTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     try {
-                        Coordinates cor = new Coordinates(searchTextField.getText());
+                        cor = new Coordinates(searchTextField.getText());
 
-                        Weather w =  new Weather(cor);
+                        w =  new Weather(cor);
                         System.out.println(w.getWindSpeed());
                         cityText.setText(String.format("City: %s",w.getNameOfCity()));
 
                         temperatureText.setText(String.format("Temperature: %s ℃",w.getTemperatureInCelsius()));
 
                         windSpeedText.setText(String.format("Wind speed: %s km/h", w.getWindSpeed()));
+                        openChartButton.setVisible(true);
+
                     }catch (SpecifiedException exception){
                         cityText.setText(exception.getExceptionMessage());
                     }finally {
@@ -67,11 +79,25 @@ public class WeatherGUI extends JFrame {
             }
         });
 
-        add(cityText);
-        add(temperatureText);
-        add(windSpeedText);
-        add(searchTextField);
+
+
+        frame.add(cityText);
+        frame.add(temperatureText);
+        frame.add(windSpeedText);
+        frame.add(searchTextField);
+        frame.add(openChartButton);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == openChartButton) {
+            try {
 
+                BarChart chartFrame = new BarChart();
+                chartFrame.display();
+            }catch (Exception exception){
+                System.out.println(exception.getMessage());
+            }
+        }
+    }
 }
