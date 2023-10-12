@@ -10,6 +10,9 @@ import org.jfree.chart.plot.FastScatterPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -19,7 +22,9 @@ import org.json.simple.JSONObject;
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import static weather.Main.fetchData;
 public class ForecastChartPage {
@@ -32,12 +37,11 @@ public class ForecastChartPage {
     ForecastChartPage(Coordinates cor){
         try {
 
-        chart = ChartFactory.createXYLineChart(
-                "Weather Forecast",
+        chart = ChartFactory.createTimeSeriesChart(
+                "Weather in " + cor.getCity(),
                 "Time",
                 "Temperature",
                 createDataset(cor),
-                PlotOrientation.VERTICAL,
                 false, true, false
                 );
 
@@ -83,19 +87,28 @@ public class ForecastChartPage {
 
     private XYDataset createDataset(Coordinates cor) throws Exception{
         try {
-            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="+Double.toString(cor.getLatitude())+"&longitude="+Double.toString(cor.getLongitude())+"&hourly=temperature_2m");
+            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="+Double.toString(cor.getLatitude())+"&longitude="+Double.toString(cor.getLongitude())+"&daily=temperature_2m_max&timezone=Europe%2FBerlin");
             JSONObject data = fetchData(url);
-            JSONObject hourlyData = (JSONObject) data.get("hourly");
-            JSONArray temperatureData = (JSONArray) hourlyData.get("temperature_2m");
-            chartData = new float[temperatureData.toArray().length][2];
+            JSONObject dailyData = (JSONObject) data.get("daily");
+            JSONArray temperatureDataJSONArr = (JSONArray) dailyData.get("temperature_2m_max");
+            Object[] temperatureData = temperatureDataJSONArr.toArray();
 
-            final XYSeries weatherSeries = new XYSeries("Weather");
-            for (int i = 0; i<chartData.length; i++){
-                weatherSeries.add(i+10.0, (double) temperatureData.toArray()[i]);
+            JSONArray daysDataJSONArr = (JSONArray) dailyData.get("time");
+            Object[] daysData = daysDataJSONArr.toArray();
+
+
+
+            final TimeSeries weatherSeries = new TimeSeries("Weather");
+            for (int i = 0; i<temperatureData.length; i++){
+                String dateStr = daysData[i].toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date day = sdf.parse(dateStr);
+                System.out.println(day);
+                weatherSeries.add(new Day(day), (double) temperatureData[i]);
 //                chartData[i][1] =  ((Double) temperatureData.toArray()[i]);
             }
 
-            final XYSeriesCollection dataset = new XYSeriesCollection(weatherSeries);
+            final TimeSeriesCollection dataset = new TimeSeriesCollection(weatherSeries);
 //            System.out.println();
             return dataset;
         }catch (Exception e){
