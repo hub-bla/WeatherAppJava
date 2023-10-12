@@ -93,8 +93,7 @@ public class WeatherPage implements ActionListener {
         if (e.getSource() == openChartButton) {
             try {
 
-                BarChart chartFrame = new BarChart();
-                chartFrame.display();
+                ForecastChartPage chartPage = new ForecastChartPage(cor);
             }catch (Exception exception){
                 System.out.println(exception.getMessage());
             }
