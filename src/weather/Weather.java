@@ -19,7 +19,7 @@ public class Weather {
 
         try {
             WeatherConditons weatherConditions = new WeatherConditons();
-            HashMap<String, String> weatherCodesMap = weatherConditions.getWeatherContidions();
+            HashMap<String, String> weatherCodesMap = weatherConditions.getWeatherConditions();
             URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + Double.toString(cor.getLatitude()) + "&longitude=" + Double.toString(cor.getLongitude()) + "&current_weather=true");
             JSONObject data = fetchData(url);
             System.out.println(url);
