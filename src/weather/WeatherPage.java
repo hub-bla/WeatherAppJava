@@ -1,11 +1,13 @@
 package weather;
 
+import javax.print.attribute.standard.MediaSize;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.nio.charset.StandardCharsets;
 
 public class WeatherPage implements ActionListener {
     private int width = 450;
@@ -62,7 +64,9 @@ public class WeatherPage implements ActionListener {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     try {
-                        cor = new Coordinates(searchTextField.getText());
+                        System.out.println(searchTextField.getText());
+                        String city = new String(searchTextField.getText().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+                        cor = new Coordinates(city);
 
                         w =  new Weather(cor);
                         System.out.println(w.getWindSpeed());
