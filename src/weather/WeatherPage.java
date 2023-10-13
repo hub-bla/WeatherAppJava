@@ -44,11 +44,15 @@ public class WeatherPage implements ActionListener {
         windSpeedText.setBounds(0, (height/2)+paddingToInc*2, width, 25);
         windSpeedText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
+        JLabel weatherCondition = new JLabel();
+        weatherCondition.setBounds(0, (height/2)+paddingToInc*3, width, 25);
+        weatherCondition.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+
         JTextField searchTextField = new JTextField();
         searchTextField.setBounds(15, 15, (int) (width*0.9), 25);
 
         openChartButton = new JButton();
-        openChartButton.setBounds(0, (height/2)+paddingToInc*3, width, 25);
+        openChartButton.setBounds(0, (height/2)+paddingToInc*4, width, 25);
         openChartButton.addActionListener(this);
         openChartButton.setText("Open forecast chart");
         openChartButton.setHorizontalTextPosition(JButton.CENTER);
@@ -67,10 +71,12 @@ public class WeatherPage implements ActionListener {
                         temperatureText.setText(String.format("Temperature: %s ℃",w.getTemperatureInCelsius()));
 
                         windSpeedText.setText(String.format("Wind speed: %s km/h", w.getWindSpeed()));
+                        weatherCondition.setText(String.format("Weather condition: %s", w.getWeatherCondition()));
                         openChartButton.setVisible(true);
 
                     }catch (SpecifiedException exception){
                         cityText.setText(exception.getExceptionMessage());
+
                     }finally {
                         searchTextField.setText(null);
                     }
@@ -82,6 +88,7 @@ public class WeatherPage implements ActionListener {
 
 
         frame.add(cityText);
+        frame.add(weatherCondition);
         frame.add(temperatureText);
         frame.add(windSpeedText);
         frame.add(searchTextField);

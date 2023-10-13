@@ -37,7 +37,6 @@ public class Main {
             JSONParser parser = new JSONParser();
             return (JSONObject) parser.parse(String.valueOf(resultJson));
         }catch (Exception e) {
-//            System.out.println(e.getMessage());
             return null;
         }
 
