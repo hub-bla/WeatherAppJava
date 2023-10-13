@@ -48,12 +48,12 @@ public class ForecastChartPage {
 
             frame.setTitle("Weather forecast");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
             frame.setLayout(null);
             frame.setSize(width, height);
             frame.add(chartPanel);
             frame.setVisible(true);
             frame.setResizable(false);
+            frame.setLocationRelativeTo(null);
             frame.setContentPane(chartPanel);
         }catch (SpecifiedException e){
             throw e;
@@ -95,5 +95,9 @@ public class ForecastChartPage {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }

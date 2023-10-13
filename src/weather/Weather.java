@@ -20,12 +20,10 @@ public class Weather {
         try {
             WeatherConditons weatherConditions = new WeatherConditons();
             HashMap<String, String> weatherCodesMap = weatherConditions.getWeatherConditions();
-            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + Double.toString(cor.getLatitude()) + "&longitude=" + Double.toString(cor.getLongitude()) + "&current_weather=true");
+            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + cor.getLatitude() + "&longitude=" + cor.getLongitude() + "&current_weather=true");
             JSONObject data = fetchData(url);
-            System.out.println(url);
             JSONObject weatherData = (JSONObject) data.get("current_weather");
             weatherCondition = weatherCodesMap.get(weatherData.get("weathercode").toString());
-            System.out.println(weatherCondition);
             windSpeed =  Double.parseDouble(String.valueOf(weatherData.get("windspeed"))) ;
             nameOfCity = cor.getCity();
             temperatureInCelsius = Double.parseDouble(String.valueOf(weatherData.get("temperature")));
@@ -38,9 +36,6 @@ public class Weather {
 
     }
 
-    private void addWeatherConditions(){
-//        weatherConditions.put()
-    }
 
     public double getTemperatureInCelsius() {
         return temperatureInCelsius;

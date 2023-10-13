@@ -14,8 +14,7 @@ public class Coordinates  {
     private String country;
     Coordinates(String city) throws SpecifiedException {
         try {
-
-            URL url = new URL ("https://geocoding-api.open-meteo.com/v1/search?name=" + encode((city.replace(" ", "%20")),"UTF-8") + "&count=1");
+            URL url = new URL ("https://geocoding-api.open-meteo.com/v1/search?name=" + encode((city),"UTF-8").replace("+", "%20") + "&count=1");
 
             JSONObject data = fetchData(url);
             if (!data.containsKey("results")){

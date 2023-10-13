@@ -36,6 +36,7 @@ public class WeatherConditons{
             weatherConditions.put(weatherCodes[i].toString(), codesMeaning[i].toString());
         }
 
+        scanner.close();
 
         }catch (Exception e){
             throw e;

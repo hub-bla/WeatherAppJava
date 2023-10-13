@@ -1,13 +1,14 @@
 package weather;
 
-import javax.print.attribute.standard.MediaSize;
 import javax.swing.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class WeatherPage implements ActionListener {
     private int width = 450;
@@ -15,8 +16,14 @@ public class WeatherPage implements ActionListener {
 
     private Weather w;
     private Coordinates cor;
+    private JLabel cityText = new JLabel();
+    private JLabel temperatureText = new JLabel();
+    private JLabel windSpeedText = new JLabel();
+    private JLabel weatherCondition = new JLabel();
+    private JButton openChartButton = new JButton();
+    private ForecastChartPage chartPage = null;
+    JTextField searchTextField = new JTextField();
     JFrame frame = new JFrame();
-    JButton openChartButton;
     WeatherPage(){
         displaySearch();
         frame.setTitle("Weather App");
@@ -29,54 +36,63 @@ public class WeatherPage implements ActionListener {
         frame.setLayout(null);
         //disable resizing
         frame.setResizable(false);
+        frame.add(cityText);
+        frame.add(weatherCondition);
+        frame.add(temperatureText);
+        frame.add(openChartButton);
+        frame.add(searchTextField);
+        frame.add(windSpeedText);
     }
 
     public void displaySearch() {
         int paddingToInc = 20;
 
-        JLabel cityText = new JLabel();
         cityText.setBounds(0, height/2, width, 25);
         cityText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
-        JLabel temperatureText = new JLabel();
+
         temperatureText.setBounds(0, (height/2)+paddingToInc, width, 25);
         temperatureText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
-        JLabel windSpeedText = new JLabel();
         windSpeedText.setBounds(0, (height/2)+paddingToInc*2, width, 25);
         windSpeedText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
-        JLabel weatherCondition = new JLabel();
+
         weatherCondition.setBounds(0, (height/2)+paddingToInc*3, width, 25);
         weatherCondition.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
-        JTextField searchTextField = new JTextField();
-        searchTextField.setBounds(15, 15, (int) (width*0.9), 25);
 
-        openChartButton = new JButton();
         openChartButton.setBounds(0, (height/2)+paddingToInc*4, width, 25);
         openChartButton.addActionListener(this);
         openChartButton.setText("Open forecast chart");
         openChartButton.setHorizontalTextPosition(JButton.CENTER);
         openChartButton.setVisible(false);
+
+        searchTextField.setBounds(15, 15, (int) (width*0.9), 25);
+
+
+
+
+        String previousSearch = getCityFromTextFile();
+
+        if (previousSearch != null){
+            try{
+                fetchWeather(previousSearch);
+
+            }catch (SpecifiedException e){
+                System.out.println(e.getExceptionMessage());
+            }
+        }
+
         searchTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     try {
-                        System.out.println(searchTextField.getText());
                         String city = new String(searchTextField.getText().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-                        cor = new Coordinates(city);
+                        fetchWeather(city);
+                        System.out.println(searchTextField.getText());
 
-                        w =  new Weather(cor);
-                        System.out.println(w.getWindSpeed());
-                        cityText.setText(String.format("City: %s",w.getNameOfCity()));
-
-                        temperatureText.setText(String.format("Temperature: %s ℃",w.getTemperatureInCelsius()));
-
-                        windSpeedText.setText(String.format("Wind speed: %s km/h", w.getWindSpeed()));
-                        weatherCondition.setText(String.format("Weather condition: %s", w.getWeatherCondition()));
-                        openChartButton.setVisible(true);
 
                     }catch (SpecifiedException exception){
                         cityText.setText(exception.getExceptionMessage());
@@ -90,21 +106,63 @@ public class WeatherPage implements ActionListener {
         });
 
 
-
-        frame.add(cityText);
-        frame.add(weatherCondition);
-        frame.add(temperatureText);
-        frame.add(windSpeedText);
-        frame.add(searchTextField);
-        frame.add(openChartButton);
     }
 
+    private void fetchWeather(String city) throws SpecifiedException{
+        System.out.println(city);
+        cor = new Coordinates(city);
+
+        w =  new Weather(cor);
+        saveSearchToFile(cor.getCity());
+        cityText.setText(String.format("City: %s",w.getNameOfCity()));
+
+        temperatureText.setText(String.format("Temperature: %s ℃",w.getTemperatureInCelsius()));
+
+        windSpeedText.setText(String.format("Wind speed: %s km/h", w.getWindSpeed()));
+        weatherCondition.setText(String.format("Weather condition: %s", w.getWeatherCondition()));
+        openChartButton.setVisible(true);
+    }
+
+    private void saveSearchToFile(String city) {
+        try {
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Hubert\\IdeaProjects\\WeatherAppJava\\src\\weather\\lastSearch.txt"));
+            writer.write(city);
+
+            // Close the writer to save the changes
+            writer.close();
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private String getCityFromTextFile(){
+        try {
+            File file = new File("C:\\Users\\Hubert\\IdeaProjects\\WeatherAppJava\\src\\weather\\lastSearch.txt");
+            Scanner scanner = new Scanner(file);
+            if(!scanner.hasNextLine()){
+                return null;
+            }
+            String city = scanner.nextLine();
+            scanner.close();
+            return city;
+        }catch (Exception e){
+            return null;
+        }
+
+
+    };
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == openChartButton) {
-            try {
 
-                ForecastChartPage chartPage = new ForecastChartPage(cor);
+            try {
+                if (chartPage != null) {
+                    chartPage.getFrame().dispose();
+                    chartPage =null;
+                }
+                chartPage = new ForecastChartPage(cor);
+
+
             }catch (Exception exception){
                 System.out.println(exception.getMessage());
             }
