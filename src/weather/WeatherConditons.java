@@ -18,7 +18,7 @@ public class WeatherConditons{
         weatherConditions = new HashMap<String, String>();
         try{
 
-        File jsonWeatherCodes = new File("C:\\Users\\Hubert\\IdeaProjects\\WeatherAppJava\\src\\weather\\weatherCodes.json");
+        File jsonWeatherCodes = new File("weatherCodes.json");
         Scanner scanner = new Scanner(jsonWeatherCodes);
         StringBuilder jsonFile = new StringBuilder();
         while(scanner.hasNextLine()){

@@ -89,6 +89,7 @@ public class WeatherPage implements ActionListener {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     try {
+                        closeChartIfOpened();
                         String city = new String(searchTextField.getText().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
                         fetchWeather(city);
                         System.out.println(searchTextField.getText());
@@ -126,7 +127,7 @@ public class WeatherPage implements ActionListener {
     private void saveSearchToFile(String city) {
         try {
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Hubert\\IdeaProjects\\WeatherAppJava\\src\\weather\\lastSearch.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("lastSearch.txt"));
             writer.write(city);
 
             // Close the writer to save the changes
@@ -137,7 +138,10 @@ public class WeatherPage implements ActionListener {
     }
     private String getCityFromTextFile(){
         try {
-            File file = new File("C:\\Users\\Hubert\\IdeaProjects\\WeatherAppJava\\src\\weather\\lastSearch.txt");
+            File file = new File("lastSearch.txt");
+            if (file.createNewFile()){
+                return null;
+            }
             Scanner scanner = new Scanner(file);
             if(!scanner.hasNextLine()){
                 return null;
@@ -151,15 +155,19 @@ public class WeatherPage implements ActionListener {
 
 
     };
+
+    private void closeChartIfOpened(){
+        if (chartPage != null) {
+            chartPage.getFrame().dispose();
+            chartPage =null;
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == openChartButton) {
 
             try {
-                if (chartPage != null) {
-                    chartPage.getFrame().dispose();
-                    chartPage =null;
-                }
+                closeChartIfOpened();
                 chartPage = new ForecastChartPage(cor);
 
 
