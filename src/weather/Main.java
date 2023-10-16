@@ -3,7 +3,7 @@ package weather;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javax.swing.*;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args)  {
-        WeatherPage wPage= new WeatherPage();
+       new WeatherPage();
         
 
     }
@@ -38,12 +38,10 @@ public class Main {
     }
     public static JSONObject fetchData(URL url) throws SpecifiedException{
         try {
-            System.out.println(url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.connect();
 
-            System.out.println(con.getResponseCode());
             return readData(con);
 
             }catch (IOException e) {

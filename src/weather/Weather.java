@@ -15,6 +15,9 @@ public class Weather {
     private double windSpeed;
     private String nameOfCity;
     private String weatherCondition;
+    private int conditionCode;
+
+    private int isDay;
     Weather(Coordinates cor) throws SpecifiedException{
 
         try {
@@ -24,9 +27,11 @@ public class Weather {
             JSONObject data = fetchData(url);
             JSONObject weatherData = (JSONObject) data.get("current_weather");
             weatherCondition = weatherCodesMap.get(weatherData.get("weathercode").toString());
+            conditionCode  = Integer.parseInt(String.valueOf(weatherData.get("weathercode")));
             windSpeed =  Double.parseDouble(String.valueOf(weatherData.get("windspeed"))) ;
             nameOfCity = cor.getCity();
             temperatureInCelsius = Double.parseDouble(String.valueOf(weatherData.get("temperature")));
+            isDay = Integer.parseInt(String.valueOf(weatherData.get("is_day")));;
         }catch (SpecifiedException e){
             throw e;
         }
@@ -36,6 +41,9 @@ public class Weather {
 
     }
 
+    public int getConditionCode() {
+        return conditionCode;
+    }
 
     public double getTemperatureInCelsius() {
         return temperatureInCelsius;
@@ -52,4 +60,6 @@ public class Weather {
     public String getNameOfCity() {
         return nameOfCity;
     }
+
+    public int getIsDay() { return isDay;}
 }

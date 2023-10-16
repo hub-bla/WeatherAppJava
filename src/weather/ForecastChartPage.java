@@ -1,7 +1,6 @@
 package weather;
 
 import javax.swing.*;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,12 +20,12 @@ import java.util.Date;
 
 import static weather.Main.fetchData;
 public class ForecastChartPage {
-    private int width = 600;
-    private int height = 450;
     JFreeChart chart;
     JFrame frame;
     ForecastChartPage(Coordinates cor) throws SpecifiedException{
         try {
+            int width = 600;
+            int height = 450;
             chart = ChartFactory.createTimeSeriesChart(
                     "Weather in " + cor.getCity(),
                     "Time",
@@ -45,7 +44,6 @@ public class ForecastChartPage {
             renderer.setSeriesStroke( 0 , new BasicStroke( 4.0f ) );
             plot.setRenderer(renderer);
             frame = new JFrame();
-
             frame.setTitle("Weather forecast");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setLayout(null);
@@ -55,6 +53,7 @@ public class ForecastChartPage {
             frame.setResizable(false);
             frame.setLocationRelativeTo(null);
             frame.setContentPane(chartPanel);
+
         }catch (SpecifiedException e){
             throw e;
         }
@@ -66,12 +65,10 @@ public class ForecastChartPage {
     private XYDataset createDataset(Coordinates cor) throws SpecifiedException {
         try {
 
-            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + Double.toString(cor.getLatitude()) + "&longitude=" + Double.toString(cor.getLongitude()) + "&daily=temperature_2m_max&timezone=Europe%2FBerlin");
+            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + cor.getLatitude() + "&longitude=" + cor.getLongitude() + "&daily=temperature_2m_max&timezone=Europe%2FBerlin");
             JSONObject data = fetchData(url);
 
-            if (!data.containsKey("daily")) {
-                throw new NoConnection();
-            }
+
 
             JSONObject dailyData = (JSONObject) data.get("daily");
             JSONArray temperatureDataJSONArr = (JSONArray) dailyData.get("temperature_2m_max");
@@ -85,6 +82,9 @@ public class ForecastChartPage {
                 String dateStr = daysData[i].toString();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date day = sdf.parse(dateStr);
+                SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                Date dayy = sdff.parse("2003-12-13 18:00");
+                System.out.println(new Day(dayy));
                 weatherSeries.add(new Day(day), (double) temperatureData[i]);
             }
 
