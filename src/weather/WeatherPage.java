@@ -1,7 +1,5 @@
 package weather;
 
-import org.w3c.dom.css.RGBColor;
-
 import javax.swing.*;
 
 import java.awt.*;
@@ -16,16 +14,15 @@ import java.util.Scanner;
 public class WeatherPage implements ActionListener {
     private final int width = 450;
     private final int height = 600;
-
     private Weather w;
     private Coordinates cor;
-    private final JLabel cityText = new JLabel();
-    private final JLabel temperatureText = new JLabel();
+    private  JLabel cityText = new JLabel();
+    private  JLabel temperatureText = new JLabel();
     private final JLabel windSpeedText = new JLabel();
-    private final JLabel weatherCondition = new JLabel();
-    private final JButton openChartButton = new JButton();
-
-    private final JLabel weatherConditionImg = new JLabel();
+    private  JLabel weatherCondition = new JLabel();
+    private  JButton openChartButton = new JButton();
+    private  JLabel weatherConditionImg = new JLabel();
+    private JLabel errorMessage = new JLabel();
     private ForecastChartPage chartPage = null;
     JTextField searchTextField = new JTextField();
     JFrame frame = new JFrame();
@@ -45,17 +42,23 @@ public class WeatherPage implements ActionListener {
         frame.add(openChartButton);
         frame.add(searchTextField);
         frame.add(windSpeedText);
+        frame.add(errorMessage);
     }
 
     public void displaySearch() {
         int paddingToInc = 20;
 
-        cityText.setBounds(0, (int) (height*0.1), width, 60);
-        cityText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
-        cityText.setFont( new Font(Font.MONOSPACED, Font.BOLD,65));
+        errorMessage.setBounds(0, (height/2)-100, width, 100);
+        errorMessage.setFont( new Font(Font.MONOSPACED, Font.BOLD,16));
+        errorMessage.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+        errorMessage.setVisible(false);
 
-        temperatureText.setBounds(30, (int) (height - (height/2.5))+paddingToInc, 200, 50);
-        temperatureText.setFont( new Font(Font.MONOSPACED, Font.BOLD,60));
+        cityText.setBounds(0, (int) (height*0.1), width, 100);
+        cityText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+        cityText.setFont( new Font(Font.MONOSPACED, Font.BOLD,60));
+
+        temperatureText.setBounds(30, (int) (height - (height/2.5))+paddingToInc, 300, 50);
+        temperatureText.setFont( new Font(Font.MONOSPACED, Font.BOLD,50));
 
         weatherConditionImg.setBounds(0,(int) (height*0.25), width, 200);
         weatherConditionImg.setHorizontalAlignment(SwingConstants.HORIZONTAL);
@@ -71,7 +74,6 @@ public class WeatherPage implements ActionListener {
         openChartButton.addActionListener(this);
         openChartButton.setText("Open forecast chart");
         openChartButton.setHorizontalTextPosition(JButton.CENTER);
-//        openChartButton.setBorder();
         openChartButton.setBorderPainted(false);
         openChartButton.setVisible(false);
         openChartButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -86,7 +88,6 @@ public class WeatherPage implements ActionListener {
         if (previousSearch != null){
             try{
                 fetchWeather(previousSearch);
-
             }catch (SpecifiedException e){
                 System.out.println(e.getExceptionMessage());
             }
@@ -103,7 +104,7 @@ public class WeatherPage implements ActionListener {
                         System.out.println(searchTextField.getText());
 
                     }catch (SpecifiedException exception){
-                        cityText.setText(exception.getExceptionMessage());
+                        onSpecifiedException(exception);
 
                     }finally {
                         searchTextField.setText(null);
@@ -117,42 +118,40 @@ public class WeatherPage implements ActionListener {
     }
 
     private ImageIcon pickImg(int conditionCode , int isDay){
+
         String imgPath = "./assets";
-        System.out.println("test");
-        System.out.println(conditionCode);
         if (isDay ==1){
             imgPath+="/day/";
-            if (conditionCode == 0 || conditionCode == 1){imgPath+="Sun.png";}
-            else if (conditionCode >=2 && conditionCode<=48){ imgPath+="Clouds.png";}
-            else if (conditionCode >= 51 && conditionCode <=67) { imgPath+="Rain.png";}
-            else if (conditionCode >= 71 && conditionCode <=77) { imgPath+="Snow.png";}
-            else if (conditionCode >= 80 && conditionCode <=99) { imgPath+="Storm.png";}
         }else {
             imgPath+="/night/";
-            if (conditionCode == 0 || conditionCode == 1){imgPath+="Sun.png";}
-            else if (conditionCode >=2 && conditionCode<=48){ imgPath+="Clouds.png";}
-            else if (conditionCode >= 51 && conditionCode <=67) { imgPath+="Rain.png";}
-            else if (conditionCode >= 71 && conditionCode <=77) { imgPath+="Snow.png";}
-            else if (conditionCode >= 80 && conditionCode <=99) { imgPath+="Storm.png";}
         }
-        ImageIcon imgIcn = new ImageIcon(imgPath);
-        weatherConditionImg.setPreferredSize(new Dimension(imgIcn.getIconWidth(),imgIcn.getIconHeight()));
-        return imgIcn;
-    }
-    private void fetchWeather(String city) throws SpecifiedException{
-        cor = new Coordinates(city);
 
+        if (conditionCode == 0 || conditionCode == 1){imgPath+="Sun.png";}
+        else if (conditionCode >=2 && conditionCode<=48){ imgPath+="Clouds.png";}
+        else if (conditionCode >= 51 && conditionCode <=67) { imgPath+="Rain.png";}
+        else if (conditionCode >= 71 && conditionCode <=77) { imgPath+="Snow.png";}
+        else if (conditionCode >= 80 && conditionCode <=99) { imgPath+="Storm.png";}
+        return new ImageIcon(imgPath);
+    }
+
+
+
+    private void fetchWeather(String city) throws SpecifiedException{
+
+        cor = new Coordinates(city);
         w =  new Weather(cor);
+
         saveSearchToFile(cor.getCity());
         Color textColor= Color.BLACK;
         Color backgroundColor= Color.WHITE;
         Color buttonColor = new Color(17, 24, 39);
+
         if(w.getIsDay() ==0){
                 textColor = Color.WHITE;
                 backgroundColor = new Color(17, 24, 39);
                 buttonColor = Color.WHITE;
         }
-
+        errorMessage.setVisible(false);
         cityText.setForeground(textColor);
         temperatureText.setForeground(textColor);
         windSpeedText.setForeground(textColor);
@@ -160,25 +159,35 @@ public class WeatherPage implements ActionListener {
 
         openChartButton.setBackground(buttonColor);
         openChartButton.setForeground(backgroundColor);
+        openChartButton.setVisible(true);
+
+
         cityText.setText(String.format("%s",w.getNameOfCity()));
+
         temperatureText.setText(String.format("%s℃",w.getTemperatureInCelsius()));
 
         weatherConditionImg.setIcon(pickImg(w.getConditionCode(), w.getIsDay()));
         weatherConditionImg.setVisible(true);
 
-        windSpeedText.setText(String.format("Wind:%s km/h", w.getWindSpeed()));
+        windSpeedText.setText(String.format("Wind: %s km/h", w.getWindSpeed()));
         weatherCondition.setText(String.format("%s", w.getWeatherCondition()));
-        openChartButton.setVisible(true);
 
         frame.getContentPane().setBackground(backgroundColor);
     }
-
+    private void onSpecifiedException(SpecifiedException e) {
+        cityText.setText(null);
+        temperatureText.setText(null);
+        windSpeedText.setText(null);
+        weatherCondition.setText(null);
+        weatherConditionImg .setIcon(null);
+        openChartButton.setVisible(false);
+        errorMessage.setText(e.getExceptionMessage());
+        errorMessage.setVisible(true);
+    }
     private void saveSearchToFile(String city) {
         try {
-
             BufferedWriter writer = new BufferedWriter(new FileWriter("lastSearch.txt"));
             writer.write(city);
-
             writer.close();
         }catch(IOException e){
             System.out.println(e.getMessage());
@@ -219,7 +228,10 @@ public class WeatherPage implements ActionListener {
                 chartPage = new ForecastChartPage(cor);
 
 
-            }catch (Exception exception){
+            }catch (SpecifiedException exception){
+                onSpecifiedException(exception);
+            }
+            catch (Exception exception){
                 System.out.println(exception.getMessage());
             }
         }

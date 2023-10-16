@@ -31,7 +31,8 @@ public class Main {
 
             JSONParser parser = new JSONParser();
             return (JSONObject) parser.parse(String.valueOf(resultJson));
-        }catch (Exception e) {
+        }
+        catch (Exception e) {
             return null;
         }
 
@@ -41,11 +42,10 @@ public class Main {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.connect();
-
             return readData(con);
-
-            }catch (IOException e) {
-                throw new NoConnection();
+        }
+        catch (IOException e) {
+             throw new NoConnection();
         }
     }
 

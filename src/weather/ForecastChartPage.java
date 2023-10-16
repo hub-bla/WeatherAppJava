@@ -37,7 +37,8 @@ public class ForecastChartPage {
             ChartPanel chartPanel = new ChartPanel(chart);
 
             chartPanel.setPreferredSize(new java.awt.Dimension(450, 600));
-            final XYPlot plot = chart.getXYPlot();
+
+            XYPlot plot = chart.getXYPlot();
 
             XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
             renderer.setSeriesPaint( 0 , Color.BLUE );
@@ -82,9 +83,6 @@ public class ForecastChartPage {
                 String dateStr = daysData[i].toString();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date day = sdf.parse(dateStr);
-                SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                Date dayy = sdff.parse("2003-12-13 18:00");
-                System.out.println(new Day(dayy));
                 weatherSeries.add(new Day(day), (double) temperatureData[i]);
             }
 

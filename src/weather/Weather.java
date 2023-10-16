@@ -23,15 +23,20 @@ public class Weather {
         try {
             WeatherConditons weatherConditions = new WeatherConditons();
             HashMap<String, String> weatherCodesMap = weatherConditions.getWeatherConditions();
-            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude=" + cor.getLatitude() + "&longitude=" + cor.getLongitude() + "&current_weather=true");
+
+            URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="
+                    + cor.getLatitude() + "&longitude=" + cor.getLongitude() + "&current_weather=true");
+
             JSONObject data = fetchData(url);
             JSONObject weatherData = (JSONObject) data.get("current_weather");
-            weatherCondition = weatherCodesMap.get(weatherData.get("weathercode").toString());
+
+            weatherCondition = weatherCodesMap.get(String.valueOf(weatherData.get("weathercode")));
             conditionCode  = Integer.parseInt(String.valueOf(weatherData.get("weathercode")));
             windSpeed =  Double.parseDouble(String.valueOf(weatherData.get("windspeed"))) ;
             nameOfCity = cor.getCity();
             temperatureInCelsius = Double.parseDouble(String.valueOf(weatherData.get("temperature")));
-            isDay = Integer.parseInt(String.valueOf(weatherData.get("is_day")));;
+            isDay = Integer.parseInt(String.valueOf(weatherData.get("is_day")));
+
         }catch (SpecifiedException e){
             throw e;
         }
