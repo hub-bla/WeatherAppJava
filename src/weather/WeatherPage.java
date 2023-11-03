@@ -46,8 +46,6 @@ public class WeatherPage implements ActionListener {
     }
 
     public void displaySearch() {
-        int paddingToInc = 20;
-
         errorMessage.setBounds(0, (height/2)-100, width, 100);
         errorMessage.setFont( new Font(Font.MONOSPACED, Font.BOLD,16));
         errorMessage.setHorizontalAlignment(SwingConstants.HORIZONTAL);
@@ -57,20 +55,20 @@ public class WeatherPage implements ActionListener {
         cityText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
         cityText.setFont( new Font(Font.MONOSPACED, Font.BOLD,60));
 
-        temperatureText.setBounds(30, (int) (height - (height/2.5))+paddingToInc, 300, 50);
+        temperatureText.setBounds(30, (int) (height - (height/2.75)), 300, 50);
         temperatureText.setFont( new Font(Font.MONOSPACED, Font.BOLD,50));
 
         weatherConditionImg.setBounds(0,(int) (height*0.25), width, 200);
         weatherConditionImg.setHorizontalAlignment(SwingConstants.HORIZONTAL);
-        windSpeedText.setBounds(width-30-200, (int) (height - (height/3))+2*paddingToInc, 200, 50);
+        windSpeedText.setBounds((int)width-230, (int) (height - (height/3.5)), 200, 50);
         windSpeedText.setHorizontalAlignment(SwingConstants.RIGHT);
         windSpeedText.setFont( new Font(Font.MONOSPACED, Font.BOLD,16));
 
-        weatherCondition.setBounds(30, (int) (height - (height/3))+2*paddingToInc, 200, 50);
+        weatherCondition.setBounds(30, (int) (height - (height/3.5)), 200, 50);
         weatherCondition.setFont( new Font(Font.MONOSPACED, Font.BOLD,16));
 
 
-        openChartButton.setBounds((width/2)-100, (int)(height/1.2), 200, 25);
+        openChartButton.setBounds((int) (width/3.6), (int)(height/1.2), 200, 25);
         openChartButton.addActionListener(this);
         openChartButton.setText("Open forecast chart");
         openChartButton.setHorizontalTextPosition(JButton.CENTER);
@@ -101,7 +99,6 @@ public class WeatherPage implements ActionListener {
                         closeChartIfOpened();
                         String city = new String(searchTextField.getText().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
                         fetchWeather(city);
-                        System.out.println(searchTextField.getText());
 
                     }catch (SpecifiedException exception){
                         onSpecifiedException(exception);
@@ -174,6 +171,7 @@ public class WeatherPage implements ActionListener {
 
         frame.getContentPane().setBackground(backgroundColor);
     }
+
     private void onSpecifiedException(SpecifiedException e) {
         cityText.setText(null);
         temperatureText.setText(null);
@@ -184,6 +182,7 @@ public class WeatherPage implements ActionListener {
         errorMessage.setText(e.getExceptionMessage());
         errorMessage.setVisible(true);
     }
+
     private void saveSearchToFile(String city) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("lastSearch.txt"));
@@ -193,6 +192,7 @@ public class WeatherPage implements ActionListener {
             System.out.println(e.getMessage());
         }
     }
+
     private String getCityFromTextFile(){
         try {
             File file = new File("lastSearch.txt");
