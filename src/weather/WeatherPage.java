@@ -53,7 +53,7 @@ public class WeatherPage implements ActionListener {
 
         cityText.setBounds(0, (int) (height*0.1), width, 100);
         cityText.setHorizontalAlignment(SwingConstants.HORIZONTAL);
-        cityText.setFont( new Font(Font.MONOSPACED, Font.BOLD,60));
+        cityText.setFont( new Font(Font.MONOSPACED, Font.BOLD,55));
 
         temperatureText.setBounds(30, (int) (height - (height/2.75)), 300, 50);
         temperatureText.setFont( new Font(Font.MONOSPACED, Font.BOLD,50));
@@ -87,7 +87,7 @@ public class WeatherPage implements ActionListener {
             try{
                 fetchWeather(previousSearch);
             }catch (SpecifiedException e){
-                System.out.println(e.getExceptionMessage());
+                onSpecifiedException(e);
             }
         }
 

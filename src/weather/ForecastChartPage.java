@@ -44,6 +44,8 @@ public class ForecastChartPage {
             renderer.setSeriesPaint( 0 , Color.BLUE );
             renderer.setSeriesStroke( 0 , new BasicStroke( 4.0f ) );
             plot.setRenderer(renderer);
+
+
             frame = new JFrame();
             frame.setTitle("Weather forecast");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -78,7 +80,8 @@ public class ForecastChartPage {
             JSONArray daysDataJSONArr = (JSONArray) dailyData.get("time");
             Object[] daysData = daysDataJSONArr.toArray();
 
-            final TimeSeries weatherSeries = new TimeSeries("Weather");
+            TimeSeries weatherSeries = new TimeSeries("Weather");
+
             for (int i = 0; i < temperatureData.length; i++) {
                 String dateStr = daysData[i].toString();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
